@@ -1,14 +1,29 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import items from "./item_inventory.json";
 import { Button, Container, Grid } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { collection, getDocs } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "./Firebase";
 
 function App() {
-  console.log(items);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const querySnapshot = await getDocs(collection(db, "inventory"));
+      const itemsList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setItems(itemsList);
+    };
+
+    fetchItems();
+  }, []);
   return (
     <Container>
       <Box
