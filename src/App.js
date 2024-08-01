@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { Button, Container, Grid, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { db } from "./Firebase";
 import {
@@ -15,6 +15,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import Camera from "./Camera";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -96,7 +97,7 @@ function App() {
     <Container>
       <Box
         sx={{
-          width: "80%",
+          width: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -155,6 +156,7 @@ function App() {
           >
             Add Item
           </Button>
+          <Camera />
         </Box>
       </Box>
     </Container>
