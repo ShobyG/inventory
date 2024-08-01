@@ -5,12 +5,17 @@ import { Button, Container, Grid } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { db } from "./Firebase";
 
 function App() {
   const [items, setItems] = useState([]);
+
+  const deleteItem = async (id) => {
+    await deleteDoc(doc(db, "inventory", id));
+    setItems(items.filter((item) => item.id !== id));
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -46,7 +51,7 @@ function App() {
         </Typography>
         <Grid container spacing={1} justifyContent="center">
           {items.map((item, index) => (
-            <Item key={index} item={item} />
+            <Item key={index} item={item} onDelete={deleteItem} />
           ))}
         </Grid>
       </Box>
@@ -54,7 +59,7 @@ function App() {
   );
 }
 
-function Item({ item }) {
+function Item({ item, onDelete }) {
   return (
     <Box
       sx={{
@@ -84,7 +89,11 @@ function Item({ item }) {
       <Button startIcon={<ArrowDropDownIcon />}></Button>
       <Typography>{item.count}</Typography>
       <Button startIcon={<ArrowDropUpIcon />}></Button>
-      <Button variant="outlined" startIcon={<DeleteIcon />}>
+      <Button
+        variant="outlined"
+        startIcon={<DeleteIcon />}
+        onClick={() => onDelete(item.id)}
+      >
         Remove
       </Button>
     </Box>
