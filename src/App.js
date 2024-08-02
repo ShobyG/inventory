@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Button, Container, Grid, TextField } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { db } from "./Firebase";
 import {
   collection,
   getDocs,
-  addDoc,
   deleteDoc,
   doc,
   updateDoc,
 } from "firebase/firestore";
 import Camera from "./Camera";
+import AddItem from "./AddItem";
 
 function App() {
   const [items, setItems] = useState([]);
-  const [newItemName, setNewItemName] = useState("");
-  const [newItemCount, setNewItemCount] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -35,38 +32,6 @@ function App() {
 
     fetchItems();
   }, []);
-
-  const addItem = async () => {
-    if (newItemName === "") {
-      setError("Item name is required.");
-      return;
-    }
-
-    if (
-      isNaN(newItemCount) ||
-      newItemCount === "" ||
-      Number(newItemCount) <= 0 ||
-      Number(newItemCount) >= 10000
-    ) {
-      setError("Count must be a number between 1 and 9999.");
-      return;
-    }
-
-    const existingItem = items.find(
-      (item) => item.name.toLowerCase() === newItemName.toLowerCase()
-    );
-    if (existingItem) {
-      setError("Item already exists.");
-      return;
-    }
-
-    const newItem = { name: newItemName, count: Number(newItemCount) };
-    const docRef = await addDoc(collection(db, "inventory"), newItem);
-    setItems([...items, { ...newItem, id: docRef.id }]);
-    setNewItemName("");
-    setNewItemCount("");
-    setError("");
-  };
 
   const deleteItem = async (id) => {
     await deleteDoc(doc(db, "inventory", id));
@@ -123,41 +88,8 @@ function App() {
             />
           ))}
         </Grid>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <TextField
-            label="Item Name"
-            value={newItemName}
-            onChange={(e) => setNewItemName(e.target.value)}
-            sx={{ marginBottom: 2, width: "300px" }}
-          />
-          <TextField
-            label="Item Count"
-            value={newItemCount}
-            onChange={(e) => setNewItemCount(e.target.value)}
-            sx={{ marginBottom: 2, width: "300px" }}
-            type="number"
-          />
-          {error && (
-            <Typography color="error" sx={{ marginBottom: 2 }}>
-              {error}
-            </Typography>
-          )}
-          <Button
-            variant="contained"
-            startIcon={<AddBoxIcon />}
-            onClick={addItem}
-          >
-            Add Item
-          </Button>
-          <Camera />
-        </Box>
+        <AddItem items={items} onAddItem={setItems} />
+        <Camera />
       </Box>
     </Container>
   );
