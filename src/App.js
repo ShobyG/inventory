@@ -21,6 +21,7 @@ function App() {
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
+  const [prediction, setPrediction] = useState(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -64,6 +65,20 @@ function App() {
       )
     );
     setError("");
+  };
+
+  const handlePrediction = (predictedLabel) => {
+    setPrediction(predictedLabel);
+    const matchingItem = items.find((item) => item.name === prediction);
+    if (matchingItem) {
+      const newCount = matchingItem.count + 1;
+      updateItemCount(matchingItem.id, newCount);
+      setImage(null);
+    } else {
+      console.log(
+        `No matching item found for predicted label: ${predictedLabel}`
+      );
+    }
   };
 
   return (
@@ -169,7 +184,14 @@ function App() {
               )}
             </Grid>
             <Grid item xs={12}>
-              {image && <ModelPredictor image={image} />}
+              {image && (
+                <ModelPredictor
+                  image={image}
+                  prediction={prediction}
+                  onPrediction={handlePrediction}
+                  handleImage={setImage}
+                />
+              )}
             </Grid>
           </Grid>
         </Box>

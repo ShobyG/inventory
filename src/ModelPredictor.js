@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import { Box } from "@mui/material";
 
-const ModelPredictor = ({ image }) => {
+const ModelPredictor = ({ image, prediction, onPrediction }) => {
   const [model, setModel] = useState(null);
-  const [prediction, setPrediction] = useState(null);
+
   const labels = ["Apples", "Bananas", "Bread", "Eggs"];
   useEffect(() => {
     const loadModel = async () => {
@@ -28,7 +28,7 @@ const ModelPredictor = ({ image }) => {
 
         const maxIndex = predictionArray.indexOf(Math.max(...predictionArray));
         console.log(labels[maxIndex]);
-        setPrediction(labels[maxIndex]);
+        onPrediction(labels[maxIndex]);
       };
       predict();
     }
@@ -40,12 +40,6 @@ const ModelPredictor = ({ image }) => {
       {prediction && (
         <Box>
           <h3>Predictions:</h3>
-          <img
-            srcSet={`${image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            src={`${image}?w=164&h=164&fit=crop&auto=format`}
-            alt={"pantry item"}
-            loading="lazy"
-          />
           <pre>{prediction}</pre>
         </Box>
       )}
