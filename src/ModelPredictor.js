@@ -13,7 +13,7 @@ const ModelPredictor = ({ image, prediction, onPrediction }) => {
       setModel(loadedModel);
     };
     loadModel();
-  }, []);
+  });
 
   useEffect(() => {
     if (model && image) {
@@ -32,7 +32,7 @@ const ModelPredictor = ({ image, prediction, onPrediction }) => {
       };
       predict();
     }
-  }, [model, image, labels]);
+  });
 
   return (
     <Box>

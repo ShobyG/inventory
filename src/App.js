@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Button, Container, Grid, Input } from "@mui/material";
+import { Button, Container, Grid, Input, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -22,6 +22,7 @@ function App() {
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
   const [prediction, setPrediction] = useState(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -81,6 +82,10 @@ function App() {
     }
   };
 
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <Container>
       <Box
@@ -100,6 +105,21 @@ function App() {
         <Typography variant="h4" sx={{ padding: "10px" }}>
           Pantry Inventory
         </Typography>
+        <TextField
+          label="Search Items"
+          variant="outlined"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          sx={{
+            marginBottom: "20px",
+            width: "80%",
+            bgcolor: "primary.main",
+            "&:hover": {
+              bgcolor: "primary.light",
+            },
+            borderRadius: "5%",
+          }}
+        />
         <Grid
           container
           spacing={1}
@@ -134,7 +154,7 @@ function App() {
           <Typography variant="h5" sx={{ padding: "10px" }}>
             Inventory Items
           </Typography>
-          {items.map((item, index) => (
+          {filteredItems.map((item, index) => (
             <Item
               key={index}
               item={item}
