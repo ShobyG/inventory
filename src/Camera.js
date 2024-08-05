@@ -7,10 +7,19 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 export default function Camera({ addImage }) {
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef(null);
+
   const handleCapture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    addImage(imageSrc);
+    if (imageSrc) {
+      // Convert data URL to image element
+      const img = new Image();
+      img.src = imageSrc;
+      img.onload = () => {
+        addImage(img);
+      };
+    }
   };
+
   return (
     <>
       <Button
