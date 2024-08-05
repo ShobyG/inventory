@@ -55,6 +55,7 @@ export default function AddItem({ items, onAddItem }) {
         "&:hover": {
           bgcolor: "grey",
         },
+        margin: "2%",
       }}
     >
       <Grid container spacing={2} sx={{ width: "50%" }}>

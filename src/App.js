@@ -46,6 +46,7 @@ function App() {
       Number(newCount) >= 10000
     ) {
       setError("Count must be a number between 1 and 9999.");
+      console.log(error);
       return;
     }
     const itemDoc = doc(db, "inventory", id);
@@ -78,7 +79,37 @@ function App() {
         <Typography variant="h4" sx={{ padding: "10px" }}>
           Pantry Inventory
         </Typography>
-        <Grid container spacing={1} justifyContent="center">
+        <Grid
+          container
+          spacing={1}
+          sx={{
+            width: "80%",
+            justifyContent: "center",
+            maxHeight: "40%",
+            overflow: "auto",
+            "&::-webkit-scrollbar": {
+              width: "10px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+              borderRadius: "5px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#888",
+              borderRadius: "10px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#555",
+            },
+            margin: "2px",
+            padding: "2px",
+            bgcolor: "primary.main",
+            "&:hover": {
+              bgcolor: "primary.light",
+            },
+            borderRadius: "10px",
+          }}
+        >
           {items.map((item, index) => (
             <Item
               key={index}
