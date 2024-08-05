@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Button, Container, Grid } from "@mui/material";
+import { Button, Container, Grid, Input } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -15,10 +15,12 @@ import {
 } from "firebase/firestore";
 import Camera from "./Camera";
 import AddItem from "./AddItem";
+import ModelPredictor from "./ModelPredictor";
 
 function App() {
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -37,7 +39,12 @@ function App() {
     await deleteDoc(doc(db, "inventory", id));
     setItems(items.filter((item) => item.id !== id));
   };
-
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const img = new Image();
+    img.onload = () => setImage(img);
+    img.src = URL.createObjectURL(file);
+  };
   const updateItemCount = async (id, newCount) => {
     if (
       isNaN(newCount) ||
@@ -68,7 +75,6 @@ function App() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
           borderRadius: 1,
           bgcolor: "primary.main",
           "&:hover": {
@@ -85,7 +91,7 @@ function App() {
           sx={{
             width: "80%",
             justifyContent: "center",
-            maxHeight: "40%",
+            maxHeight: "40vh",
             overflow: "auto",
             "&::-webkit-scrollbar": {
               width: "10px",
@@ -110,6 +116,9 @@ function App() {
             borderRadius: "10px",
           }}
         >
+          <Typography variant="h5" sx={{ padding: "10px" }}>
+            Inventory Items
+          </Typography>
           {items.map((item, index) => (
             <Item
               key={index}
@@ -119,8 +128,53 @@ function App() {
             />
           ))}
         </Grid>
+        <Box
+          sx={{
+            width: "80%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            border: "solid grey",
+            padding: "2%",
+            borderRadius: "10px",
+            bgcolor: "primary.main",
+            "&:hover": {
+              bgcolor: "grey",
+            },
+            margin: "2%",
+          }}
+        >
+          <Grid
+            sx={{
+              padding: "2em",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Grid item xs={12}>
+              <Typography variant="h5" sx={{ padding: "10px" }}>
+                Scan to Add Item
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {!image && <Camera addImage={setImage} />}
+            </Grid>
+            <Grid item xs={12}>
+              {!image && (
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              {image && <ModelPredictor image={image} />}
+            </Grid>
+          </Grid>
+        </Box>
+
         <AddItem items={items} onAddItem={setItems} />
-        <Camera />
       </Box>
     </Container>
   );

@@ -4,12 +4,12 @@ import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 
-export default function Camera() {
+export default function Camera({ addImage }) {
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef(null);
   const handleCapture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    console.log(imageSrc);
+    addImage(imageSrc);
   };
   return (
     <>
@@ -19,7 +19,7 @@ export default function Camera() {
         onClick={() => setShowWebcam(!showWebcam)}
         sx={{ marginTop: 2 }}
       >
-        {showWebcam ? "Hide Camera" : "Show Camera"}
+        {showWebcam ? "Hide Camera" : "Scan Using Camera"}
       </Button>
       {showWebcam && (
         <Box sx={{ marginTop: 2 }}>
