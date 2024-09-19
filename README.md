@@ -9,8 +9,7 @@ Modify Item Count: Increase or decrease the count of existing items.
 Delete Items: Remove items from your inventory.
 Automatic Increment: Automatically update item counts by scanning them with your camera using TensorFlow.js VGG16 model.
 Live Demo
-Check out the application live at: Inventory Application
-
+Check out the application live at: https://d46n82s7de7cn.cloudfront.net/
 **Running Locally**
 To run the application locally, use the following command:npm start
 
